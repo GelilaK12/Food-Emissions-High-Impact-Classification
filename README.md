@@ -1,4 +1,5 @@
-# Predicting High-Impact Foods Using Lifecycle Emissions
+# Food Emissions High-Impact Classification
+#### Predicting High-Impact Foods Using Lifecycle Emissions
 
 ## Project Overview
 
