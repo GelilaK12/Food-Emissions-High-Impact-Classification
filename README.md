@@ -1,22 +1,22 @@
 # Food Emissions High-Impact Classification
-#### Predicting High-Impact Foods Using Lifecycle Emissions
 
 ## Project Overview
 
-This project builds an end-to-end machine learning pipeline to predict whether a food product is environmentally high-impact based on lifecycle greenhouse gas emissions. Using emissions from different lifecycle stages such as farm, land use change, and processing, I framed this as a binary classification problem. The goal was not only to achieve reliable predictions but also to maintain interpretability, perform thorough diagnostics, and exercise sound modeling judgment.
+- End-to-end machine learning workflow to predict whether a food product is environmentally high-impact based on lifecycle greenhouse gas emissions.
 
-I chose this dataset because lifecycle emissions naturally reflect both additive and stage-specific effects, making it a good test case for comparing linear and nonlinear models. The project demonstrates careful workflow management, feature analysis, and evaluation of model behavior in a way that mirrors real-world ML engineering practices.
+- Uses emissions from production stages such as farm, land use change, processing, transport, packaging, and retail.
+
+- Focus on building reliable and interpretable models while demonstrating strong workflow management, feature analysis, and evaluation.
+
+- Models progress from simple linear regression to logistic regression, random forest, and XGBoost to compare additive, nonlinear, and boosted approaches.
 
 ## Problem Framing
 
-#### Objective:
-- Predict whether a food product is in the top quartile of total lifecycle emissions (“High Impact”) using individual stage emissions.
+#### Objective: Predict whether a food product is in the top quartile of total lifecycle emissions (“High Impact”) using individual stage emissions.
 
-#### Why classification:
-- Rather than predicting exact emissions, classification is useful for applications like screening high-risk products, prioritizing environmental interventions, or guiding policy and supply-chain decisions.
+#### Why classification: Rather than predicting exact emissions, classification is useful for applications like screening high-risk products, prioritizing environmental interventions, or guiding policy and supply-chain decisions.
 
-#### Target variable:
-- High_Impact = 1 if total emissions are greater than or equal to the 75th percentile, otherwise 0.
+#### Target variable: High_Impact = 1 if total emissions are greater than or equal to the 75th percentile, otherwise 0.
 
 ## Data
 
