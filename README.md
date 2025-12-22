@@ -26,23 +26,25 @@ I chose this dataset because lifecycle emissions naturally reflect both additive
 
 - #### Features: Lifecycle emission stages
 
-  -Land use change
-
-  -Animal feed
-
-  -Farm
-
-  -Processing
-
-  -Transport
-
-  -Packaging
-
-  -Retail
+  - Land use change
+  - Animal feed
+  - Farm
+  - Processing
+  - Transport
+  - Packaging
+  - Retail
 
 - The dataset was cleaned to standardize names, convert numeric fields, and handle missing values. Summary statistics and missing value reports are saved in the outputs folder.
 
 ## Modeling Approach
+
+#### Linear Regression
+
+- Predicted total emissions from lifecycle stages.
+
+- Coefficients were approximately 1.0, confirming total emissions are the sum of the components.
+  
+- Used mainly to validate data integrity, not for prediction.
 
 #### Logistic Regression (Baseline Model)
 
@@ -64,48 +66,68 @@ I chose this dataset because lifecycle emissions naturally reflect both additive
 
 - #### I was surprised to see that Random Forest did not improve much over Logistic Regression. This suggests that most of the predictive signal is additive and can be captured with a linear model.
 
+#### XGBoost (Gradient Boosting)
 
-## Model Performance
+- Captures complex patterns using a boosted ensemble of decision trees.
 
-- Both models achieved similar results on the test set. Logistic Regression correctly predicted most high-impact foods while maintaining full accuracy on low-impact foods. Random Forest performance was comparable, showing that a simple linear model is sufficient in this context.
+- #### Workflow includes:
 
-## Feature Interpretation
+    - Baseline model training
 
-It was important to separate magnitude, correlation, and predictive importance:
+    - Feature importance analysis: built-in, SHAP, and permutation importance
+    
+    - Hyperparameter tuning with GridSearchCV
 
-- #### Magnitude (EDA): The Farm stage contributes the most to total emissions and is highly variable.
+Key observations:
 
-- #### Correlation with target: Processing, Animal Feed, and Land Use Change show the strongest linear relationships with High_Impact.
+  - Gain-based importance favors Farm
+  - SHAP highlights Land Use Change as the strongest positive contributor
+  - Permutation importance confirms Farm as highly predictive
+  - Slightly worse performance than logistic regression and Random Forest, indicating additive signal dominates
 
-- #### Predictive importance (Random Forest): Land Use Change provides the most unique information for classification. Permutation tests confirmed that Farm, while large and variable, is partially redundant with other stages.
-
-- I learned that a feature with high emissions is not necessarily the most useful for predicting high-impact foods. Predictive importance highlights which features actually help the model separate classes effectively.
-
-## Diagnostics
-
-#### Key diagnostics included:
+## Diagnostics and Evaluation
 
 - Stratified train/test split
 
-- Confusion matrices and precision/recall evaluation
+- Confusion matrices and evaluation metrics: precision, recall, F1
 
-- Logistic Regression coefficient analysis
+- Feature importance comparisons to separate magnitude from predictive contribution
 
-- Random Forest impurity-based and permutation-based feature importance
+- SHAP plots for XGBoost interpretability
 
-- Boxplots comparing stage emissions across high- and low-impact foods
+- Permutation importance to show unique feature contributions
 
-- Correlation analysis with the target variable
-
-These steps ensure that model results are interpretable, reliable, and defensible.
-
+- Boxplots comparing stage emissions across high-impact and low-impact foods
 
 ## Key Takeaways
 
-- High-impact foods can be reliably predicted using lifecycle emissions.
+- Lifecycle stage emissions can reliably predict high-impact foods.
 
-- Model complexity beyond logistic regression did not meaningfully improve performance.
+- Feature importance differs from raw magnitude, highlighting the need for careful diagnostics.
 
-- Feature importance differs from absolute emissions, highlighting the importance of careful diagnostics.
+- Additive models like logistic regression capture most of the predictive signal.
 
-- This project demonstrates end-to-end ML workflow ownership, strong reasoning, and interpretable results, which are core skills for an ML engineer.
+- Nonlinear models add limited improvement in this dataset.
+
+- Demonstrates end-to-end ML workflow ownership, including preprocessing, modeling, interpretability, and hyperparameter tuning.
+
+## Repository Structure
+
+    Food-Emissions-High-Impact-Classification/
+    │
+    ├─ data/
+    │   └─ Food_Production.csv      
+    ├─ images/                        
+    ├─ outputs/                       
+    ├─ scripts/
+    │   ├─ linear_regression.py
+    │   ├─ baseline_models.py
+    │   └─ xgboost_analysis.py
+    ├─ README.md
+
+## Usage
+Clone the repository:
+
+    git clone https://github.com/GelilaK12/Food-Emissions-High-Impact-Classification.git
+    cd Food-Emissions-High-Impact-Classification
+
