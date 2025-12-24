@@ -8,7 +8,7 @@
 
 - Focus on building reliable and interpretable models while demonstrating strong workflow management, feature analysis, and evaluation.
 
-- Models progress from simple linear regression to logistic regression, random forest, and XGBoost to compare additive, nonlinear, and boosted approaches.
+- Models progress from linear regression to logistic regression, random forest, XGBoost, and a Multi-Layer Perceptron (MLP) neural network to compare additive, tree-based, boosted, and deep learning approaches.
 
 ## Problem Framing
 
@@ -85,6 +85,31 @@ Key observations:
   - Permutation importance confirms Farm as highly predictive
   - Slightly worse performance than logistic regression and Random Forest, indicating additive signal dominates
 
+#### Multi-Layer Perceptron (MLP Neural Network)
+
+- Introduces a feed-forward neural network to evaluate whether a deep learning model provides additional predictive power over tree-based and linear approaches.
+
+- #### Workflow includes:
+
+    - Feature scaling using StandardScaler (required for neural networks)
+
+    - Baseline MLP with two hidden layers
+
+    - L2 regularization to reduce overfitting
+
+    - Hyperparameter tuning of architecture, activation functions, and regularization strength
+
+    - Calibration curve analysis to evaluate probability reliability
+
+    - Permutation feature importance for interpretability
+
+Key observations:
+
+  - MLP performance was comparable to Logistic Regression and Random Forest.
+  - The calibration curve showed mild overconfidence, indicating that predicted probabilities were not perfectly reliable.
+  - Permutation importance suggested different feature prioritization patterns (e.g., Packaging and Transport appearing more influential), but without improved predictive performance.
+  - Results reinforce that this dataset is dominated by additive signal rather than complex nonlinear structure.
+
 ## Diagnostics and Evaluation
 
 - Stratified train/test split
@@ -98,6 +123,8 @@ Key observations:
 - Permutation importance to show unique feature contributions
 
 - Boxplots comparing stage emissions across high-impact and low-impact foods
+- Calibration curves to evaluate probability trustworthiness for the MLP
+- Neural network training loss curves to monitor convergence behavior
 
 ## Key Takeaways
 
@@ -107,8 +134,7 @@ Key observations:
 
 - Additive models like logistic regression capture most of the predictive signal.
 
-- Nonlinear models add limited improvement in this dataset.
-
+- Nonlinear and neural network models (Random Forest, XGBoost, MLP) add limited improvement over Logistic Regression, indicating the problem is primarily driven by additive relationships.
 - Demonstrates end-to-end ML workflow ownership, including preprocessing, modeling, interpretability, and hyperparameter tuning.
 
 ## Repository Structure
@@ -123,6 +149,7 @@ Key observations:
     │   ├─ linear_regression.py
     │   ├─ baseline_models.py
     │   └─ xgboost_analysis.py
+    │   └─ mlp_classifier.py
     ├─ README.md
 
 ## Usage
