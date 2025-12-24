@@ -165,3 +165,10 @@ plt.title("Permutation Feature Importance - MLP")
 plt.tight_layout()
 plt.savefig(f"{IMAGE_FOLDER}/mlp_permutation_importance.png")
 plt.close()
+
+# ============================================
+# Insight
+# ============================================
+print("\n===Insight ===")
+print("1. Logistic Regression and Random Forest performed similarly to MLP on this small dataset.")
+print("2. MLP shows potential nonlinear interactions (packaging and transport importance), but metrics did not improve.")
