@@ -3,7 +3,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scipy.stats import zscore
 
+from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
@@ -67,15 +69,38 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # ============================================
-# Baseline MLP Model
+# Outlier detection
 # ============================================
-mlp = MLPClassifier(hidden_layer_sizes=(32, 16), activation="relu", solver="adam", max_iter=1000, random_state=42)
-mlp.fit(X_train_scaled, y_train)
+z_scores = np.abs(zscore(X_train_scaled))
+outliers = np.where(z_scores > 3)
+print("Outliers")
+print (outliers)
+plt.figure(figsize=(10,6))
+sns.boxplot(data=X_train, orient="h")
+plt.title("Feature Distributions with Outliers")
+plt.xlabel("Value")
+plt.ylabel("Feature")
+plt.tight_layout()
+plt.savefig(f"{IMAGE_FOLDER}/mlp_outliers.png")
+plt.close()
+
 
 # ============================================
-# Evaluation
+# Baseline MLP Model
 # ============================================
-y_pred = mlp.predict(X_test_scaled)
+smote = SMOTE(random_state=42)
+X_train_bal, y_train_bal = smote.fit_resample(X_train_scaled, y_train)
+
+mlp = MLPClassifier(hidden_layer_sizes=(32,16), activation="relu", solver="adam", max_iter=1000, random_state=42)
+mlp.fit(X_train_bal, y_train_bal)
+
+# ============================================
+# Threshold tuning & Evaluation
+# ============================================
+y_prob = mlp.predict_proba(X_test_scaled)[:,1]
+threshold = 0.4  
+y_pred = (y_prob >= threshold).astype(int)
+
 
 report = classification_report(y_test, y_pred, output_dict=True)
 pd.DataFrame(report).transpose().to_csv(f"{OUTPUT_FOLDER}/mlp_classification_report.csv")
