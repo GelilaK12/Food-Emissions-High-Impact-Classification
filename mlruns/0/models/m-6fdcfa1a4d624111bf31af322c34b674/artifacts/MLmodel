@@ -1,0 +1,22 @@
+artifact_path: file:C:/Users/kewtiiiii/Desktop/Projects/food-emissions-classification/mlruns/0/models/m-6fdcfa1a4d624111bf31af322c34b674/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.5
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+mlflow_version: 3.8.0
+model_id: m-6fdcfa1a4d624111bf31af322c34b674
+model_size_bytes: 189574
+model_uuid: m-6fdcfa1a4d624111bf31af322c34b674
+prompts: null
+run_id: 137a96b9fa33437cb520f82914460d0d
+utc_time_created: '2025-12-25 19:26:34.376680'

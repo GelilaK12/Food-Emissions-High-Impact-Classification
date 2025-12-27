@@ -1,0 +1,79 @@
+[34m[1mwandb[0m: wandb.init() called while a run is active and reinit is set to 'default', so returning the previous run.
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [intercept, coeffs]
+Traceback (most recent call last):
+  File [35m"<string>"[0m, line [35m1[0m, in [35m<module>[0m
+    from multiprocessing.spawn import spawn_main; [31mspawn_main[0m[1;31m(parent_pid=22264, pipe_handle=1204)[0m
+                                                  [31m~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\spawn.py"[0m, line [35m122[0m, in [35mspawn_main[0m
+    exitcode = _main(fd, parent_sentinel)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\spawn.py"[0m, line [35m131[0m, in [35m_main[0m
+    [31mprepare[0m[1;31m(preparation_data)[0m
+    [31m~~~~~~~[0m[1;31m^^^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\spawn.py"[0m, line [35m246[0m, in [35mprepare[0m
+    [31m_fixup_main_from_path[0m[1;31m(data['init_main_from_path'])[0m
+    [31m~~~~~~~~~~~~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\spawn.py"[0m, line [35m297[0m, in [35m_fixup_main_from_path[0m
+    main_content = runpy.run_path(main_path,
+                                  run_name="__mp_main__")
+  File [35m"<frozen runpy>"[0m, line [35m287[0m, in [35mrun_path[0m
+  File [35m"<frozen runpy>"[0m, line [35m98[0m, in [35m_run_module_code[0m
+  File [35m"<frozen runpy>"[0m, line [35m88[0m, in [35m_run_code[0m
+  File [35m"c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py"[0m, line [35m55[0m, in [35m<module>[0m
+    trace = pm.sample(draws=config.num_samples, chains=config.num_chains, tune=1000, target_accept=0.95, return_inferencedata=True)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py"[0m, line [35m928[0m, in [35msample[0m
+    [31m_mp_sample[0m[1;31m(**sample_args, **parallel_args)[0m
+    [31m~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py"[0m, line [35m1387[0m, in [35m_mp_sample[0m
+    sampler = ps.ParallelSampler(
+        draws=draws,
+    ...<10 lines>...
+        zarr_chains=zarr_chains,
+    )
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\parallel.py"[0m, line [35m463[0m, in [35m__init__[0m
+    [31mProcessAdapter[0m[1;31m([0m
+    [31m~~~~~~~~~~~~~~[0m[1;31m^[0m
+        [1;31mdraws,[0m
+        [1;31m^^^^^^[0m
+    ...<9 lines>...
+        [1;31mzarr_chains_pickled=zarr_chains_pickled,[0m
+        [1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1;31m)[0m
+    [1;31m^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\parallel.py"[0m, line [35m311[0m, in [35m__init__[0m
+    [31mself._process.start[0m[1;31m()[0m
+    [31m~~~~~~~~~~~~~~~~~~~[0m[1;31m^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\process.py"[0m, line [35m121[0m, in [35mstart[0m
+    self._popen = [31mself._Popen[0m[1;31m(self)[0m
+                  [31m~~~~~~~~~~~[0m[1;31m^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\context.py"[0m, line [35m337[0m, in [35m_Popen[0m
+    return Popen(process_obj)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\popen_spawn_win32.py"[0m, line [35m47[0m, in [35m__init__[0m
+    prep_data = spawn.get_preparation_data(process_obj._name)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\spawn.py"[0m, line [35m164[0m, in [35mget_preparation_data[0m
+    [31m_check_not_importing_main[0m[1;31m()[0m
+    [31m~~~~~~~~~~~~~~~~~~~~~~~~~[0m[1;31m^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\multiprocessing\spawn.py"[0m, line [35m140[0m, in [35m_check_not_importing_main[0m
+    raise RuntimeError('''
+    ...<16 lines>...
+    ''')
+[1;35mRuntimeError[0m: [35m
+        An attempt has been made to start a new process before the
+        current process has finished its bootstrapping phase.
+
+        This probably means that you are not using fork to start your
+        child processes and you have forgotten to use the proper idiom
+        in the main module:
+
+            if __name__ == '__main__':
+                freeze_support()
+                ...
+
+        The "freeze_support()" line can be omitted if the program
+        is not going to be frozen to produce an executable.
+
+        To fix this issue, refer to the "Safe importing of main module"
+        section in https://docs.python.org/3/library/multiprocessing.html
+        [0m
+[0m

@@ -1,0 +1,15 @@
+{"time":"2025-12-25T18:16:55.3487653-05:00","level":"INFO","msg":"stream: starting","core version":"0.23.1"}
+{"time":"2025-12-25T18:16:56.36798-05:00","level":"INFO","msg":"stream: created new stream","id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.3685089-05:00","level":"INFO","msg":"handler: started","stream_id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.3856528-05:00","level":"INFO","msg":"stream: started","id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.3859063-05:00","level":"INFO","msg":"writer: started","stream_id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.3859063-05:00","level":"INFO","msg":"sender: started","stream_id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.4670168-05:00","level":"ERROR","msg":"HTTP error","status":404,"method":"POST","url":"https://api.wandb.ai/graphql"}
+{"time":"2025-12-25T18:16:56.4680712-05:00","level":"ERROR","msg":"runupserter: failed to init run","error":"returned error 404: {\"data\":{\"upsertBucket\":null},\"errors\":[{\"message\":\"entity your_username not found during upsertBucket\",\"path\":[\"upsertBucket\"]}]}"}
+{"time":"2025-12-25T18:16:56.5097551-05:00","level":"INFO","msg":"stream: closing","id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.5122694-05:00","level":"ERROR","msg":"sender: uploadConfigFile: runupserter: run not yet initialized"}
+{"time":"2025-12-25T18:16:56.5620971-05:00","level":"ERROR","msg":"runfiles: runupserter: run not yet initialized"}
+{"time":"2025-12-25T18:16:56.5671012-05:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-12-25T18:16:56.5680964-05:00","level":"INFO","msg":"handler: closed","stream_id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.5680964-05:00","level":"INFO","msg":"sender: closed","stream_id":"uil8xcvq"}
+{"time":"2025-12-25T18:16:56.5680964-05:00","level":"INFO","msg":"stream: closed","id":"uil8xcvq"}

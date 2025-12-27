@@ -1,0 +1,15 @@
+2025-12-25 18:20:34,377 INFO    MainThread:30224 [wandb_setup.py:_flush():80] Current SDK version is 0.23.1
+2025-12-25 18:20:34,378 INFO    MainThread:30224 [wandb_setup.py:_flush():80] Configure stats pid to 30224
+2025-12-25 18:20:34,378 INFO    MainThread:30224 [wandb_setup.py:_flush():80] Loading settings from C:\Users\kewtiiiii\.config\wandb\settings
+2025-12-25 18:20:34,378 INFO    MainThread:30224 [wandb_setup.py:_flush():80] Loading settings from C:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\wandb\settings
+2025-12-25 18:20:34,378 INFO    MainThread:30224 [wandb_setup.py:_flush():80] Loading settings from environment variables
+2025-12-25 18:20:34,378 INFO    MainThread:30224 [wandb_init.py:setup_run_log_directory():714] Logging user logs to C:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\wandb\run-20251225_182034-qs3hmwm3\logs\debug.log
+2025-12-25 18:20:34,379 INFO    MainThread:30224 [wandb_init.py:setup_run_log_directory():715] Logging internal logs to C:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\wandb\run-20251225_182034-qs3hmwm3\logs\debug-internal.log
+2025-12-25 18:20:34,379 INFO    MainThread:30224 [wandb_init.py:init():841] calling init triggers
+2025-12-25 18:20:34,379 INFO    MainThread:30224 [wandb_init.py:init():846] wandb.init called with sweep_config: {}
+config: {'model_type': 'bayesian_logistic', 'num_samples': 2000, 'num_chains': 4, '_wandb': {}}
+2025-12-25 18:20:34,380 INFO    MainThread:30224 [wandb_init.py:init():889] starting backend
+2025-12-25 18:20:36,999 INFO    MainThread:30224 [wandb_init.py:init():892] sending inform_init request
+2025-12-25 18:20:37,048 INFO    MainThread:30224 [wandb_init.py:init():900] backend started and connected
+2025-12-25 18:20:37,051 INFO    MainThread:30224 [wandb_init.py:init():970] updated telemetry
+2025-12-25 18:20:37,134 INFO    MainThread:30224 [wandb_init.py:init():994] communicating run to backend with 90.0 second timeout

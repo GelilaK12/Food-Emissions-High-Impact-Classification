@@ -1,0 +1,101 @@
+if __name__ == "__main__":
+    import os
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from sklearn.model_selection import train_test_split
+    from sklearn.linear_model import LinearRegression
+    from sklearn.metrics import mean_squared_error, r2_score
+    import wandb
+    import joblib
+
+    # =====================
+    # Initialize W&B
+    # =====================
+    wandb.init(
+        project="food_emissions_classification",
+        entity="gelilakassaye6-vsco",
+        config={
+            "model_type": "linear_regression"
+        }
+    )
+    config = wandb.config
+
+    # =====================
+    # Folder Setup
+    # =====================
+    OUTPUT_FOLDER = "outputs/linear_agg"
+    IMAGE_FOLDER = "images/linear_agg"
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    os.makedirs(IMAGE_FOLDER, exist_ok=True)
+
+    # =====================
+    # Load & Clean Data
+    # =====================
+    data = pd.read_csv("data/Food_Production.csv")
+    data.columns = data.columns.str.strip().str.lower().str.replace(" ", "_")
+
+    features = ["land_use_change", "animal_feed", "farm", "processing", "transport", "packaging", "retail"]
+    X = data[features]
+    y = data["total_emissions"]
+
+    # Optional: flag animal-based foods
+    animal_foods = ["Beef (beef herd)", "Beef (dairy herd)", "Lamb & Mutton", "Pig Meat",
+                    "Poultry Meat", "Milk", "Cheese", "Eggs", "Fish (farmed)", "Shrimps (farmed)"]
+    data["animal_based"] = data["food_product"].isin(animal_foods).astype(int)
+
+    # Save cleaned data
+    data.to_csv(f"{OUTPUT_FOLDER}/food_production_cleaned.csv", index=False)
+
+    # =====================
+    # Train/Test Split
+    # =====================
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # =====================
+    # Linear Regression
+    # =====================
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    # =====================
+    # Evaluation
+    # =====================
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    print(f"Mean Squared Error: {mse}")
+    print(f"R² Score: {r2}")
+
+    wandb.log({"mse": mse, "r2": r2})
+
+    # =====================
+    # Coefficient Analysis
+    # =====================
+    coef_df = pd.DataFrame({"Stage": X.columns, "Coefficient": model.coef_}).sort_values(by="Coefficient", ascending=False)
+    coef_file = os.path.join(OUTPUT_FOLDER, "stage_coefficient.csv")
+    coef_df.to_csv(coef_file, index=False)
+    wandb.save(coef_file)
+
+    plt.figure(figsize=(8,5))
+    plt.barh(coef_df["Stage"], coef_df["Coefficient"])
+    plt.xlabel("Coefficient")
+    plt.title("Linear Regression Coefficients")
+    plt.gca().invert_yaxis()
+    coef_img = os.path.join(IMAGE_FOLDER, "linear_coefficients.png")
+    plt.tight_layout()
+    plt.savefig(coef_img)
+    plt.close()
+    wandb.log({"linear_coefficients": wandb.Image(coef_img)})
+
+    # =====================
+    # Save Model Artifact
+    # =====================
+    model_file = os.path.join(OUTPUT_FOLDER, "linear_model.pkl")
+    joblib.dump(model, model_file)
+    artifact = wandb.Artifact("linear_model", type="model")
+    artifact.add_file(model_file)
+    wandb.log_artifact(artifact)
+
+    wandb.finish()

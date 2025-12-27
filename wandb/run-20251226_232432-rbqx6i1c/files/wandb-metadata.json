@@ -1,0 +1,28 @@
+{
+  "os":  "Windows-10-10.0.19045-SP0",
+  "python":  "CPython 3.13.5",
+  "startedAt":  "2025-12-27T04:24:32.184877Z",
+  "program":  "c:\\Users\\kewtiiiii\\Desktop\\Projects\\food-emissions-classification\\scripts\\wandb\\xgboost_analysis_wandb",
+  "codePath":  "scripts\\wandb\\xgboost_analysis_wandb",
+  "codePathLocal":  "scripts\\wandb\\xgboost_analysis_wandb",
+  "git":  {
+    "remote":  "https://github.com/GelilaK12/food-emissions-classification.git",
+    "commit":  "6ec7da2a8b902f8618bb1319a65ef016566299ad"
+  },
+  "email":  "gelilakassaye6@gmail.com",
+  "root":  "C:\\Users\\kewtiiiii\\Desktop\\Projects\\food-emissions-classification",
+  "host":  "DESKTOP-1MKIQG9",
+  "executable":  "C:\\Users\\kewtiiiii\\anaconda3\\python.exe",
+  "cpu_count":  4,
+  "cpu_count_logical":  8,
+  "disk":  {
+    "/":  {
+      "total":  "126710968320",
+      "used":  "112470769664"
+    }
+  },
+  "memory":  {
+    "total":  "7469842432"
+  },
+  "writerId":  "5i0v0bwzbq68vj68wqi9we6pq8algswy"
+}

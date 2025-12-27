@@ -1,0 +1,48 @@
+_wandb:
+    value:
+        cli_version: 0.23.1
+        e:
+            cj4sgwdjznjec0lcajb71ocevtk1ddnd:
+                codePath: scripts\food_emissions_wandb.py
+                codePathLocal: scripts\food_emissions_wandb.py
+                cpu_count: 4
+                cpu_count_logical: 8
+                disk:
+                    /:
+                        total: "126710968320"
+                        used: "112380112896"
+                email: gelilakassaye6@gmail.com
+                executable: C:\Users\kewtiiiii\anaconda3\python.exe
+                git:
+                    commit: 6ec7da2a8b902f8618bb1319a65ef016566299ad
+                    remote: https://github.com/GelilaK12/food-emissions-classification.git
+                host: DESKTOP-1MKIQG9
+                memory:
+                    total: "7469842432"
+                os: Windows-10-10.0.19045-SP0
+                program: c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py
+                python: CPython 3.13.5
+                root: C:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification
+                startedAt: "2025-12-26T23:49:12.371346Z"
+                writerId: cj4sgwdjznjec0lcajb71ocevtk1ddnd
+        m: []
+        python_version: 3.13.5
+        t:
+            "1":
+                - 53
+            "2":
+                - 53
+            "3":
+                - 16
+            "4": 3.13.5
+            "5": 0.23.1
+            "8":
+                - 3
+            "12": 0.23.1
+            "13": windows-amd64
+model_type:
+    value: bayesian_logistic
+num_chains:
+    value: 4
+num_samples:
+    value: 2000

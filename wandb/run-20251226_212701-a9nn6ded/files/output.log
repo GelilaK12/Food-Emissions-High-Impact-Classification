@@ -1,0 +1,71 @@
+COLUMNS: ['food_product', 'land_use_change', 'animal_feed', 'farm', 'processing', 'transport', 'packaging', 'retail', 'total_emissions', 'eutrophying_emissions_per_1000kcal_(gpo₄eq_per_1000kcal)', 'eutrophying_emissions_per_kilogram_(gpo₄eq_per_kilogram)', 'eutrophying_emissions_per_100g_protein_(gpo₄eq_per_100_grams_protein)', 'freshwater_withdrawals_per_1000kcal_(liters_per_1000kcal)', 'freshwater_withdrawals_per_100g_protein_(liters_per_100g_protein)', 'freshwater_withdrawals_per_kilogram_(liters_per_kilogram)', 'greenhouse_gas_emissions_per_1000kcal_(kgco₂eq_per_1000kcal)', 'greenhouse_gas_emissions_per_100g_protein_(kgco₂eq_per_100g_protein)', 'land_use_per_1000kcal_(m²_per_1000kcal)', 'land_use_per_kilogram_(m²_per_kilogram)', 'land_use_per_100g_protein_(m²_per_100g_protein)', 'scarcity-weighted_water_use_per_kilogram_(liters_per_kilogram)', 'scarcity-weighted_water_use_per_100g_protein_(liters_per_100g_protein)', 'scarcity-weighted_water_use_per_1000kcal_(liters_per_1000_kilocalories)']
+['food_product', 'land_use_change', 'animal_feed', 'farm', 'processing', 'transport', 'packaging', 'retail', 'total_emissions', 'eutrophying_emissions_per_1000kcal_(gpo₄eq_per_1000kcal)', 'eutrophying_emissions_per_kilogram_(gpo₄eq_per_kilogram)', 'eutrophying_emissions_per_100g_protein_(gpo₄eq_per_100_grams_protein)', 'freshwater_withdrawals_per_1000kcal_(liters_per_1000kcal)', 'freshwater_withdrawals_per_100g_protein_(liters_per_100g_protein)', 'freshwater_withdrawals_per_kilogram_(liters_per_kilogram)', 'greenhouse_gas_emissions_per_1000kcal_(kgco₂eq_per_1000kcal)', 'greenhouse_gas_emissions_per_100g_protein_(kgco₂eq_per_100g_protein)', 'land_use_per_1000kcal_(m²_per_1000kcal)', 'land_use_per_kilogram_(m²_per_kilogram)', 'land_use_per_100g_protein_(m²_per_100g_protein)', 'scarcity-weighted_water_use_per_kilogram_(liters_per_kilogram)', 'scarcity-weighted_water_use_per_100g_protein_(liters_per_100g_protein)', 'scarcity-weighted_water_use_per_1000kcal_(liters_per_1000_kilocalories)', 'High_Impact']
+Initializing NUTS using jitter+adapt_diag...
+Traceback (most recent call last):
+  File "c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py", line 54, in <module>
+    trace = pm.sample(draws=300,chains=1, tune=300,target_accept=0.9,cores=1,  return_inferencedata=True)
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py", line 825, in sample
+    initial_points, step = init_nuts(
+                           ~~~~~~~~~^
+        init=init,
+        ^^^^^^^^^^
+    ...<9 lines>...
+        **kwargs,
+        ^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py", line 1598, in init_nuts
+    initial_points = _init_jitter(
+        model,
+    ...<4 lines>...
+        logp_fn=model_logp_fn,
+    )
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py", line 1479, in _init_jitter
+    model.check_start_vals(point)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\model\core.py", line 1781, in check_start_vals
+    raise SamplingError(
+    ...<4 lines>...
+    )
+pymc.exceptions.SamplingError: Initial evaluation of model at starting point failed!
+Starting values:
+{'intercept': array(0.53877549), 'coeffs': array([ 0.65258603,  0.80086813, -0.96811095, -0.86666496, -0.97769129,
+       -0.28290804, -0.36872151])}
+
+Logp initial evaluation results:
+{'intercept': np.float64(-3.22), 'coeffs': np.float64(-22.57), 'y_obs': np.float64(-inf)}
+You can call `model.debug()` for more details.
+Traceback (most recent call last):
+  File [35m"c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py"[0m, line [35m54[0m, in [35m<module>[0m
+    trace = pm.sample(draws=300,chains=1, tune=300,target_accept=0.9,cores=1,  return_inferencedata=True)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py"[0m, line [35m825[0m, in [35msample[0m
+    initial_points, step = [31minit_nuts[0m[1;31m([0m
+                           [31m~~~~~~~~~[0m[1;31m^[0m
+        [1;31minit=init,[0m
+        [1;31m^^^^^^^^^^[0m
+    ...<9 lines>...
+        [1;31m**kwargs,[0m
+        [1;31m^^^^^^^^^[0m
+    [1;31m)[0m
+    [1;31m^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py"[0m, line [35m1598[0m, in [35minit_nuts[0m
+    initial_points = _init_jitter(
+        model,
+    ...<4 lines>...
+        logp_fn=model_logp_fn,
+    )
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\sampling\mcmc.py"[0m, line [35m1479[0m, in [35m_init_jitter[0m
+    [31mmodel.check_start_vals[0m[1;31m(point)[0m
+    [31m~~~~~~~~~~~~~~~~~~~~~~[0m[1;31m^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pymc\model\core.py"[0m, line [35m1781[0m, in [35mcheck_start_vals[0m
+    raise SamplingError(
+    ...<4 lines>...
+    )
+[1;35mpymc.exceptions.SamplingError[0m: [35mInitial evaluation of model at starting point failed!
+Starting values:
+{'intercept': array(0.53877549), 'coeffs': array([ 0.65258603,  0.80086813, -0.96811095, -0.86666496, -0.97769129,
+       -0.28290804, -0.36872151])}
+
+Logp initial evaluation results:
+{'intercept': np.float64(-3.22), 'coeffs': np.float64(-22.57), 'y_obs': np.float64(-inf)}
+You can call `model.debug()` for more details.[0m

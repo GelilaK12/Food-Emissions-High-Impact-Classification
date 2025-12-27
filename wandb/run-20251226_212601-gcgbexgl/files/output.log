@@ -1,0 +1,43 @@
+COLUMNS: ['food_product', 'land_use_change', 'animal_feed', 'farm', 'processing', 'transport', 'packaging', 'retail', 'total_emissions', 'eutrophying_emissions_per_1000kcal_(gpo₄eq_per_1000kcal)', 'eutrophying_emissions_per_kilogram_(gpo₄eq_per_kilogram)', 'eutrophying_emissions_per_100g_protein_(gpo₄eq_per_100_grams_protein)', 'freshwater_withdrawals_per_1000kcal_(liters_per_1000kcal)', 'freshwater_withdrawals_per_100g_protein_(liters_per_100g_protein)', 'freshwater_withdrawals_per_kilogram_(liters_per_kilogram)', 'greenhouse_gas_emissions_per_1000kcal_(kgco₂eq_per_1000kcal)', 'greenhouse_gas_emissions_per_100g_protein_(kgco₂eq_per_100g_protein)', 'land_use_per_1000kcal_(m²_per_1000kcal)', 'land_use_per_kilogram_(m²_per_kilogram)', 'land_use_per_100g_protein_(m²_per_100g_protein)', 'scarcity-weighted_water_use_per_kilogram_(liters_per_kilogram)', 'scarcity-weighted_water_use_per_100g_protein_(liters_per_100g_protein)', 'scarcity-weighted_water_use_per_1000kcal_(liters_per_1000_kilocalories)']
+Traceback (most recent call last):
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Total_emissions'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py", line 32, in <module>
+    df['High_Impact'] = (df['Total_emissions'] >= df['Total_emissions'].quantile(0.75)).astype(int)
+                         ~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Total_emissions'
+Traceback (most recent call last):
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py"[0m, line [35m3805[0m, in [35mget_loc[0m
+    return [31mself._engine.get_loc[0m[1;31m(casted_key)[0m
+           [31m~~~~~~~~~~~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^[0m
+  File [35m"index.pyx"[0m, line [35m167[0m, in [35mpandas._libs.index.IndexEngine.get_loc[0m
+  File [35m"index.pyx"[0m, line [35m196[0m, in [35mpandas._libs.index.IndexEngine.get_loc[0m
+  File [35m"pandas\\_libs\\hashtable_class_helper.pxi"[0m, line [35m7081[0m, in [35mpandas._libs.hashtable.PyObjectHashTable.get_item[0m
+  File [35m"pandas\\_libs\\hashtable_class_helper.pxi"[0m, line [35m7089[0m, in [35mpandas._libs.hashtable.PyObjectHashTable.get_item[0m
+[1;35mKeyError[0m: [35m'Total_emissions'[0m
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File [35m"c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py"[0m, line [35m32[0m, in [35m<module>[0m
+    df['High_Impact'] = ([31mdf[0m[1;31m['Total_emissions'][0m >= df['Total_emissions'].quantile(0.75)).astype(int)
+                         [31m~~[0m[1;31m^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\frame.py"[0m, line [35m4102[0m, in [35m__getitem__[0m
+    indexer = self.columns.get_loc(key)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py"[0m, line [35m3812[0m, in [35mget_loc[0m
+    raise KeyError(key) from err
+[1;35mKeyError[0m: [35m'Total_emissions'[0m

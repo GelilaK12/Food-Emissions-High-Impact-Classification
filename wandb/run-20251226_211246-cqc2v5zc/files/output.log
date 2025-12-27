@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py", line 32, in <module>
+    X = df[features].values
+        ~~^^^^^^^^^^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4108, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6200, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 6252, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['Land use change', 'Animal Feed'] not in index"
+Traceback (most recent call last):
+  File [35m"c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py"[0m, line [35m32[0m, in [35m<module>[0m
+    X = [31mdf[0m[1;31m[features][0m.values
+        [31m~~[0m[1;31m^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\frame.py"[0m, line [35m4108[0m, in [35m__getitem__[0m
+    indexer = [31mself.columns._get_indexer_strict[0m[1;31m(key, "columns")[0m[1]
+              [31m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py"[0m, line [35m6200[0m, in [35m_get_indexer_strict[0m
+    [31mself._raise_if_missing[0m[1;31m(keyarr, indexer, axis_name)[0m
+    [31m~~~~~~~~~~~~~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py"[0m, line [35m6252[0m, in [35m_raise_if_missing[0m
+    raise KeyError(f"{not_found} not in index")
+[1;35mKeyError[0m: [35m"['Land use change', 'Animal Feed'] not in index"[0m

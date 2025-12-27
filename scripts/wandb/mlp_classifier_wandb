@@ -1,0 +1,212 @@
+if __name__ == "__main__":
+    import os
+    import numpy as np
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from scipy.stats import zscore
+
+    from imblearn.over_sampling import SMOTE
+    from sklearn.model_selection import train_test_split, GridSearchCV
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.neural_network import MLPClassifier
+    from sklearn.metrics import classification_report, confusion_matrix
+    from sklearn.inspection import permutation_importance
+    from sklearn.calibration import calibration_curve
+
+    import wandb
+    import joblib
+
+    # =====================
+    # Initialize W&B
+    # =====================
+    wandb.init(
+        project="food_emissions_classification",
+        entity="gelilakassaye6-vsco",
+        config={
+            "mlp_hidden_layers": [(32,16)],
+            "mlp_activation": "relu",
+            "mlp_solver": "adam",
+            "mlp_alpha": 0.01,
+            "mlp_max_iter": 1000,
+            "mlp_threshold": 0.4
+        }
+    )
+    config = wandb.config
+
+    # =====================
+    # Folder Setup
+    # =====================
+    OUTPUT_FOLDER = "outputs/mlp_classifier"
+    IMAGE_FOLDER = "images/mlp_classifier"
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    os.makedirs(IMAGE_FOLDER, exist_ok=True)
+
+    # =====================
+    # Load and Clean Data
+    # =====================
+    data = pd.read_csv("data/Food_Production.csv")
+    data.columns = data.columns.str.strip().str.lower().str.replace(" ", "_")
+    data["high_impact"] = (data["total_emissions"] >= data["total_emissions"].quantile(0.75)).astype(int)
+
+    features = ["land_use_change", "animal_feed", "farm", "processing", "transport", "packaging", "retail"]
+    X = data[features].astype("float64")
+    y = data["high_impact"]
+
+    # Handle missing or infinite values
+    X = X.replace([np.inf, -np.inf], np.nan)
+    mask = X.notna().all(axis=1)
+    X = X[mask]
+    y = y[mask]
+
+    # Train/test split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+    # Scale features
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
+    # =====================
+    # Outlier Detection
+    # =====================
+    z_scores = np.abs(zscore(X_train_scaled))
+    outliers = np.where(z_scores > 3)
+    print("Outliers indices:", outliers)
+    plt.figure(figsize=(10,6))
+    sns.boxplot(data=X_train, orient="h")
+    plt.title("Feature Distributions with Outliers")
+    plt.xlabel("Value")
+    plt.ylabel("Feature")
+    outlier_img = os.path.join(IMAGE_FOLDER, "mlp_outliers.png")
+    plt.tight_layout()
+    plt.savefig(outlier_img)
+    plt.close()
+
+    # =====================
+    # Baseline MLP with SMOTE
+    # =====================
+    smote = SMOTE(random_state=42)
+    X_train_bal, y_train_bal = smote.fit_resample(X_train_scaled, y_train)
+
+    mlp = MLPClassifier(
+        hidden_layer_sizes=config.mlp_hidden_layers[0],
+        activation=config.mlp_activation,
+        solver=config.mlp_solver,
+        max_iter=config.mlp_max_iter,
+        alpha=config.mlp_alpha,
+        random_state=42
+    )
+    mlp.fit(X_train_bal, y_train_bal)
+
+    # Threshold tuning
+    y_prob = mlp.predict_proba(X_test_scaled)[:,1]
+    y_pred = (y_prob >= config.mlp_threshold).astype(int)
+
+    # Classification report
+    report = classification_report(y_test, y_pred, output_dict=True)
+    report_df = pd.DataFrame(report).transpose()
+    report_file = os.path.join(OUTPUT_FOLDER, "mlp_classification_report.csv")
+    report_df.to_csv(report_file)
+    wandb.save(report_file)
+    print(report_df)
+
+    # Confusion matrix
+    cm = confusion_matrix(y_test, y_pred)
+    plt.figure()
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
+    plt.title("MLP Confusion Matrix")
+    cm_img = os.path.join(IMAGE_FOLDER, "mlp_confusion_matrix.png")
+    plt.savefig(cm_img)
+    plt.close()
+
+    # Training loss curve
+    plt.figure()
+    plt.plot(mlp.loss_curve_)
+    plt.xlabel("Iterations")
+    plt.ylabel("Loss")
+    plt.title("MLP Training Loss Curve")
+    loss_img = os.path.join(IMAGE_FOLDER, "mlp_loss_curve.png")
+    plt.savefig(loss_img)
+    plt.close()
+
+    # Hyperparameter tuning
+    param_grid = {
+        "hidden_layer_sizes": [(16,16), (32,16), (32,32)],
+        "activation": ["relu", "tanh"],
+        "alpha": [0.0001, 0.001, 0.01]
+    }
+    grid = GridSearchCV(
+        MLPClassifier(max_iter=config.mlp_max_iter, random_state=42),
+        param_grid,
+        cv=5,
+        scoring="f1",
+        n_jobs=-1
+    )
+    grid.fit(X_train_scaled, y_train)
+    best_mlp = grid.best_estimator_
+    print("Best hyperparameters:", grid.best_params_)
+
+    # Predictions
+    y_pred_best = best_mlp.predict(X_test_scaled)
+    best_report = classification_report(y_test, y_pred_best, output_dict=True)
+    best_report_df = pd.DataFrame(best_report).transpose()
+    best_report_file = os.path.join(OUTPUT_FOLDER, "mlp_best_classification_report.csv")
+    best_report_df.to_csv(best_report_file)
+    wandb.save(best_report_file)
+
+    # Calibration curve
+    y_prob_best = best_mlp.predict_proba(X_test_scaled)[:,1]
+    prob_true, prob_pred = calibration_curve(y_test, y_prob_best, n_bins=10)
+    plt.figure(figsize=(6,6))
+    plt.plot(prob_pred, prob_true, marker="o", label="MLP")
+    plt.plot([0,1],[0,1], linestyle="--", color="gray", label="Perfect Calibration")
+    plt.xlabel("Predicted Probability")
+    plt.ylabel("True Probability")
+    plt.title("MLP Calibration Curve")
+    plt.legend()
+    calib_img = os.path.join(IMAGE_FOLDER, "mlp_calibration_curve.png")
+    plt.savefig(calib_img)
+    plt.close()
+
+    # Permutation importance
+    perm = permutation_importance(best_mlp, X_test_scaled, y_test, n_repeats=10, random_state=42)
+    importance_df = pd.DataFrame({
+        "feature": features,
+        "importance": perm.importances_mean,
+        "std": perm.importances_std
+    }).sort_values(by="importance", ascending=True)
+    perm_file = os.path.join(OUTPUT_FOLDER, "mlp_permutation_importance.csv")
+    importance_df.to_csv(perm_file, index=False)
+
+    plt.figure(figsize=(8,6))
+    plt.barh(importance_df["feature"], importance_df["importance"], xerr=importance_df["std"])
+    plt.xlabel("Permutation Importance")
+    plt.ylabel("Feature")
+    plt.title("Permutation Feature Importance - MLP")
+    plt.tight_layout()
+    perm_img = os.path.join(IMAGE_FOLDER, "mlp_permutation_importance.png")
+    plt.savefig(perm_img)
+    plt.close()
+
+    # =====================
+    # Log everything to W&B
+    # =====================
+    wandb.log({
+        "classification_report": wandb.Table(dataframe=best_report_df),
+        "confusion_matrix": wandb.Image(cm_img),
+        "loss_curve": wandb.Image(loss_img),
+        "calibration_curve": wandb.Image(calib_img),
+        "permutation_importance": wandb.Image(perm_img)
+    })
+
+    # Save model as artifact
+    model_file = os.path.join(OUTPUT_FOLDER, "mlp_best_model.pkl")
+    joblib.dump(best_mlp, model_file)
+    artifact = wandb.Artifact("mlp_best_model", type="model")
+    artifact.add_file(model_file)
+    wandb.log_artifact(artifact)
+
+    wandb.finish()

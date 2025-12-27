@@ -1,0 +1,28 @@
+{
+  "os":  "Windows-10-10.0.19045-SP0",
+  "python":  "CPython 3.13.5",
+  "startedAt":  "2025-12-27T03:01:45.693050Z",
+  "program":  "c:\\Users\\kewtiiiii\\Desktop\\Projects\\food-emissions-classification\\scripts\\mlp_classifier_wandb",
+  "codePath":  "scripts\\mlp_classifier_wandb",
+  "codePathLocal":  "scripts\\mlp_classifier_wandb",
+  "git":  {
+    "remote":  "https://github.com/GelilaK12/food-emissions-classification.git",
+    "commit":  "6ec7da2a8b902f8618bb1319a65ef016566299ad"
+  },
+  "email":  "gelilakassaye6@gmail.com",
+  "root":  "C:\\Users\\kewtiiiii\\Desktop\\Projects\\food-emissions-classification",
+  "host":  "DESKTOP-1MKIQG9",
+  "executable":  "C:\\Users\\kewtiiiii\\anaconda3\\python.exe",
+  "cpu_count":  4,
+  "cpu_count_logical":  8,
+  "disk":  {
+    "/":  {
+      "total":  "126710968320",
+      "used":  "112597733376"
+    }
+  },
+  "memory":  {
+    "total":  "7469842432"
+  },
+  "writerId":  "n4jc2whuapxymj6nguj9jpdlgt6vauv4"
+}

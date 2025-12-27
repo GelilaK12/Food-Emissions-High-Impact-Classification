@@ -1,0 +1,43 @@
+[34m[1mwandb[0m: wandb.init() called while a run is active and reinit is set to 'default', so returning the previous run.
+Traceback (most recent call last):
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3805, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "index.pyx", line 167, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 196, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7081, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\\_libs\\hashtable_class_helper.pxi", line 7089, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'High_Impact'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py", line 44, in <module>
+    y = df["High_Impact"].values
+        ~~^^^^^^^^^^^^^^^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\frame.py", line 4102, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py", line 3812, in get_loc
+    raise KeyError(key) from err
+KeyError: 'High_Impact'
+Traceback (most recent call last):
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py"[0m, line [35m3805[0m, in [35mget_loc[0m
+    return [31mself._engine.get_loc[0m[1;31m(casted_key)[0m
+           [31m~~~~~~~~~~~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^[0m
+  File [35m"index.pyx"[0m, line [35m167[0m, in [35mpandas._libs.index.IndexEngine.get_loc[0m
+  File [35m"index.pyx"[0m, line [35m196[0m, in [35mpandas._libs.index.IndexEngine.get_loc[0m
+  File [35m"pandas\\_libs\\hashtable_class_helper.pxi"[0m, line [35m7081[0m, in [35mpandas._libs.hashtable.PyObjectHashTable.get_item[0m
+  File [35m"pandas\\_libs\\hashtable_class_helper.pxi"[0m, line [35m7089[0m, in [35mpandas._libs.hashtable.PyObjectHashTable.get_item[0m
+[1;35mKeyError[0m: [35m'High_Impact'[0m
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File [35m"c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py"[0m, line [35m44[0m, in [35m<module>[0m
+    y = [31mdf[0m[1;31m["High_Impact"][0m.values
+        [31m~~[0m[1;31m^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\frame.py"[0m, line [35m4102[0m, in [35m__getitem__[0m
+    indexer = self.columns.get_loc(key)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\core\indexes\base.py"[0m, line [35m3812[0m, in [35mget_loc[0m
+    raise KeyError(key) from err
+[1;35mKeyError[0m: [35m'High_Impact'[0m

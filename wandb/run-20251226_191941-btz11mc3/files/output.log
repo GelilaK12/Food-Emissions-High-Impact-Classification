@@ -1,0 +1,55 @@
+[34m[1mwandb[0m: wandb.init() called while a run is active and reinit is set to 'default', so returning the previous run.
+Traceback (most recent call last):
+  File "c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py", line 42, in <module>
+    df = pd.read_csv("food-emissions-classification/data/Food_Production.csv")
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ~~~~~~~~~~^
+        f,
+        ^^
+    ...<6 lines>...
+        storage_options=self.options.get("storage_options", None),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\common.py", line 873, in get_handle
+    handle = open(
+        handle,
+    ...<3 lines>...
+        newline="",
+    )
+FileNotFoundError: [Errno 2] No such file or directory: 'food-emissions-classification/data/Food_Production.csv'
+Traceback (most recent call last):
+  File [35m"c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\food_emissions_wandb.py"[0m, line [35m42[0m, in [35m<module>[0m
+    df = pd.read_csv("food-emissions-classification/data/Food_Production.csv")
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py"[0m, line [35m1026[0m, in [35mread_csv[0m
+    return _read(filepath_or_buffer, kwds)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py"[0m, line [35m620[0m, in [35m_read[0m
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py"[0m, line [35m1620[0m, in [35m__init__[0m
+    self._engine = [31mself._make_engine[0m[1;31m(f, self.engine)[0m
+                   [31m~~~~~~~~~~~~~~~~~[0m[1;31m^^^^^^^^^^^^^^^^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\parsers\readers.py"[0m, line [35m1880[0m, in [35m_make_engine[0m
+    self.handles = [31mget_handle[0m[1;31m([0m
+                   [31m~~~~~~~~~~[0m[1;31m^[0m
+        [1;31mf,[0m
+        [1;31m^^[0m
+    ...<6 lines>...
+        [1;31mstorage_options=self.options.get("storage_options", None),[0m
+        [1;31m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+    [1;31m)[0m
+    [1;31m^[0m
+  File [35m"C:\Users\kewtiiiii\anaconda3\Lib\site-packages\pandas\io\common.py"[0m, line [35m873[0m, in [35mget_handle[0m
+    handle = open(
+        handle,
+    ...<3 lines>...
+        newline="",
+    )
+[1;35mFileNotFoundError[0m: [35m[Errno 2] No such file or directory: 'food-emissions-classification/data/Food_Production.csv'[0m

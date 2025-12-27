@@ -1,0 +1,151 @@
+if __name__ == "__main__":
+    import pandas as pd
+    import numpy as np
+    import os
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    from sklearn.model_selection import train_test_split
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.metrics import classification_report, confusion_matrix
+    from sklearn.inspection import permutation_importance
+    import wandb
+    import joblib
+
+    # =====================
+    # Initialize W&B
+    # =====================
+    wandb.init(
+        project="food_emissions_classification",
+        entity="gelilakassaye6-vsco",
+        config={
+            "models": ["logistic_regression", "random_forest"],
+            "rf_n_estimators": 200,
+            "rf_max_depth": 5,
+            "rf_class_weight": "balanced",
+            "logistic_max_iter": 1000
+        }
+    )
+    config = wandb.config
+
+    # =====================
+    # Folder Setup
+    # =====================
+    OUTPUT_FOLDER = "outputs/logistic_rf"
+    IMAGE_FOLDER = "images/logistic_rf"
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    os.makedirs(IMAGE_FOLDER, exist_ok=True)
+
+    # =====================
+    # Load and Clean Data
+    # =====================
+    data = pd.read_csv("data/Food_Production.csv")
+    data.columns = data.columns.str.strip().str.lower().str.replace(" ", "_")
+    print("COLUMNS:", data.columns.tolist())
+
+    data["high_impact"] = (data["total_emissions"] >= data["total_emissions"].quantile(0.75)).astype(int)
+
+    features = ["land_use_change", "animal_feed", "farm", "processing", "transport", "packaging", "retail"]
+    X = data[features].astype("float64")
+    y = data["high_impact"]
+
+    # Handle missing or infinite values
+    X = X.replace([np.inf, -np.inf], np.nan)
+    mask = X.notna().all(axis=1)
+    X = X[mask]
+    y = y[mask]
+
+    # Scale features
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+
+    # Train/test split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+    # =====================
+    # Helper function for logging to W&B
+    # =====================
+    def log_model_run(model, model_name, X_test, y_test, image_files=[], extra_csv=[]):
+        y_pred = model.predict(X_test)
+        acc = (y_pred == y_test).mean()
+        wandb.log({f"{model_name}_accuracy": acc})
+
+        # Classification report
+        report = classification_report(y_test, y_pred, output_dict=True)
+        report_df = pd.DataFrame(report).transpose()
+        report_file = os.path.join(OUTPUT_FOLDER, f"{model_name}_classification_report.csv")
+        report_df.to_csv(report_file)
+        wandb.save(report_file)
+
+        # Confusion matrix
+        cm = confusion_matrix(y_test, y_pred)
+        cm_df = pd.DataFrame(cm, index=["Actual 0", "Actual 1"], columns=["Predicted 0", "Predicted 1"])
+        cm_file = os.path.join(OUTPUT_FOLDER, f"{model_name}_confusion_matrix.csv")
+        cm_df.to_csv(cm_file)
+        wandb.save(cm_file)
+
+        # Log images
+        for img in image_files:
+            wandb.log({f"{model_name}_{os.path.basename(img)}": wandb.Image(img)})
+
+        # Log model artifact
+        model_file = os.path.join(OUTPUT_FOLDER, f"{model_name}_model.pkl")
+        joblib.dump(model, model_file)
+        artifact = wandb.Artifact(f"{model_name}_model", type="model")
+        artifact.add_file(model_file)
+        wandb.log_artifact(artifact)
+
+    # =====================
+    # Logistic Regression
+    # =====================
+    log_model_lr = LogisticRegression(max_iter=config.logistic_max_iter)
+    log_model_lr.fit(X_train, y_train)
+
+    coef_df = pd.DataFrame({"feature": features, "coefficient": log_model_lr.coef_[0]}).sort_values(by="coefficient", ascending=False)
+    coef_img = os.path.join(IMAGE_FOLDER, "logistic_coefficients.png")
+    plt.figure(figsize=(8,5))
+    plt.barh(coef_df["feature"], coef_df["coefficient"])
+    plt.xlabel("Coefficient")
+    plt.title("Logistic Regression Coefficients")
+    plt.gca().invert_yaxis()
+    plt.tight_layout()
+    plt.savefig(coef_img)
+    plt.close()
+
+    log_model_run(log_model_lr, "logistic_regression", X_test, y_test, image_files=[coef_img])
+
+    # =====================
+    # Random Forest
+    # =====================
+    rf_model = RandomForestClassifier(
+        n_estimators=config.rf_n_estimators,
+        max_depth=config.rf_max_depth,
+        class_weight=config.rf_class_weight,
+        random_state=42
+    )
+    rf_model.fit(X_train, y_train)
+
+    # Feature importance
+    importances = pd.Series(rf_model.feature_importances_, index=features).sort_values(ascending=False)
+    imp_img = os.path.join(IMAGE_FOLDER, "rf_feature_importances.png")
+    plt.figure(figsize=(8,5))
+    importances.plot(kind="bar")
+    plt.ylabel("Importance")
+    plt.title("Random Forest Feature Importances")
+    plt.tight_layout()
+    plt.savefig(imp_img)
+    plt.close()
+
+    # Permutation importance
+    perm_result = permutation_importance(rf_model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=1)
+    perm_importances = pd.Series(perm_result.importances_mean, index=features)
+    perm_file = os.path.join(OUTPUT_FOLDER, "rf_permutation_importance.csv")
+    perm_importances.to_csv(perm_file)
+
+    log_model_run(rf_model, "random_forest", X_test, y_test, image_files=[imp_img], extra_csv=[perm_file])
+
+    # =====================
+    # Finish W&B Run
+    # =====================
+    wandb.finish()

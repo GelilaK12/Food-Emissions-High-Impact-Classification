@@ -1,0 +1,58 @@
+_wandb:
+    value:
+        cli_version: 0.23.1
+        e:
+            jydfp050zhdif2603dsc12zb7l63zjd4:
+                codePath: scripts\logistic_random_forest_wandb
+                codePathLocal: scripts\logistic_random_forest_wandb
+                cpu_count: 4
+                cpu_count_logical: 8
+                disk:
+                    /:
+                        total: "126710968320"
+                        used: "112585723904"
+                email: gelilakassaye6@gmail.com
+                executable: C:\Users\kewtiiiii\anaconda3\python.exe
+                git:
+                    commit: 6ec7da2a8b902f8618bb1319a65ef016566299ad
+                    remote: https://github.com/GelilaK12/food-emissions-classification.git
+                host: DESKTOP-1MKIQG9
+                memory:
+                    total: "7469842432"
+                os: Windows-10-10.0.19045-SP0
+                program: c:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\scripts\logistic_random_forest_wandb
+                python: CPython 3.13.5
+                root: C:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification
+                startedAt: "2025-12-27T02:53:53.905645Z"
+                writerId: jydfp050zhdif2603dsc12zb7l63zjd4
+        m: []
+        python_version: 3.13.5
+        t:
+            "1":
+                - 5
+                - 53
+            "2":
+                - 5
+                - 53
+            "3":
+                - 2
+                - 3
+                - 16
+            "4": 3.13.5
+            "5": 0.23.1
+            "8":
+                - 3
+            "12": 0.23.1
+            "13": windows-amd64
+logistic_max_iter:
+    value: 1000
+models:
+    value:
+        - logistic_regression
+        - random_forest
+rf_class_weight:
+    value: balanced
+rf_max_depth:
+    value: 5
+rf_n_estimators:
+    value: 200

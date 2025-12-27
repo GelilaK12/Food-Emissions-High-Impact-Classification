@@ -1,0 +1,165 @@
+if __name__ == "__main__":
+    import os
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import xgboost as xgb
+    from sklearn.model_selection import train_test_split, GridSearchCV
+    from sklearn.metrics import classification_report, confusion_matrix
+    from sklearn.inspection import permutation_importance
+    import shap
+    import wandb
+    import joblib
+
+    # =====================
+    # Initialize W&B
+    # =====================
+    wandb.init(
+        project="food_emissions_classification",
+        entity="gelilakassaye6-vsco",
+        config={
+            "xgb_n_estimators": 100,
+            "xgb_max_depth": 3,
+            "xgb_learning_rate": 0.1
+        }
+    )
+    config = wandb.config
+
+    # =====================
+    # Folder Setup
+    # =====================
+    OUTPUT_FOLDER = "outputs/xgboost"
+    IMAGE_FOLDER = "images/xgboost"
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    os.makedirs(IMAGE_FOLDER, exist_ok=True)
+    os.makedirs(os.path.join(IMAGE_FOLDER, "shap"), exist_ok=True)
+    os.makedirs(os.path.join(IMAGE_FOLDER, "feature_importances"), exist_ok=True)
+
+    # =====================
+    # Load and Clean Data
+    # =====================
+    data = pd.read_csv("data/Food_Production.csv")
+    data.columns = data.columns.str.strip().str.lower().str.replace(" ", "_")
+    data["high_impact"] = (data["total_emissions"] >= data["total_emissions"].quantile(0.75)).astype(int)
+
+    features = ["land_use_change", "animal_feed", "farm", "processing", "transport", "packaging", "retail"]
+    X = data[features].astype("float64")
+    y = data["high_impact"]
+
+    X = X.replace([np.inf, -np.inf], np.nan)
+    mask = X.notna().all(axis=1)
+    X = X[mask]
+    y = y[mask]
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+    # =====================
+    # Helper function
+    # =====================
+    def train_evaluate_model(model, X_train, y_train, X_test, y_test, features, prefix):
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        # Classification report
+        report_df = pd.DataFrame(classification_report(y_test, y_pred, output_dict=True)).transpose()
+        report_file = os.path.join(OUTPUT_FOLDER, f"{prefix}_classification_report.csv")
+        report_df.to_csv(report_file)
+        wandb.save(report_file)
+
+        # Confusion matrix
+        cm = confusion_matrix(y_test, y_pred)
+        plt.figure()
+        plt.imshow(cm, cmap="Blues", interpolation="nearest")
+        plt.colorbar()
+        plt.xticks([0,1], ["Predicted 0","Predicted 1"])
+        plt.yticks([0,1], ["Actual 0","Actual 1"])
+        plt.title(f"{prefix} Confusion Matrix")
+        cm_img = os.path.join(IMAGE_FOLDER, f"{prefix}_confusion_matrix.png")
+        plt.savefig(cm_img)
+        plt.close()
+        wandb.save(cm_img)
+
+        # Feature importance
+        if hasattr(model, "feature_importances_"):
+            importances = pd.Series(model.feature_importances_, index=features).sort_values(ascending=False)
+            importances_file = os.path.join(OUTPUT_FOLDER, f"{prefix}_feature_importances.csv")
+            importances.to_csv(importances_file)
+            wandb.save(importances_file)
+
+            plt.figure(figsize=(8,6))
+            importances.plot(kind="bar", title=f"{prefix} Feature Importances")
+            plt.tight_layout()
+            fi_img = os.path.join(IMAGE_FOLDER, "feature_importances", f"{prefix}_feature_importances.png")
+            plt.savefig(fi_img)
+            plt.close()
+            wandb.save(fi_img)
+
+        return y_pred, model
+
+    # =====================
+    # Baseline XGBoost
+    # =====================
+    xgb_model = xgb.XGBClassifier(
+        n_estimators=config.xgb_n_estimators,
+        max_depth=config.xgb_max_depth,
+        learning_rate=config.xgb_learning_rate,
+        objective="binary:logistic",
+        eval_metric="logloss",
+        use_label_encoder=False,
+        random_state=42
+    )
+    y_pred_base, xgb_model = train_evaluate_model(xgb_model, X_train, y_train, X_test, y_test, features, "xgboost_baseline")
+
+    # =====================
+    # SHAP Explanations
+    # =====================
+    explainer = shap.Explainer(xgb_model, X_train)
+    shap_values = explainer(X_test)
+
+    shap.summary_plot(shap_values, X_test, max_display=5, show=False)
+    plt.tight_layout()
+    plt.savefig(os.path.join(IMAGE_FOLDER, "shap", "shap_summary_top5.png"))
+    plt.close()
+
+    shap.summary_plot(shap_values, X_test, show=False)
+    plt.tight_layout()
+    plt.savefig(os.path.join(IMAGE_FOLDER, "shap", "shap_summary_all.png"))
+    plt.close()
+
+    # =====================
+    # Permutation Importance
+    # =====================
+    perm = permutation_importance(xgb_model, X_test, y_test, n_repeats=10, random_state=42)
+    perm_df = pd.Series(perm.importances_mean, index=features).sort_values(ascending=False)
+    perm_file = os.path.join(OUTPUT_FOLDER, "xgboost_perm_importance.csv")
+    perm_df.to_csv(perm_file)
+    wandb.save(perm_file)
+
+    plt.figure(figsize=(8,6))
+    perm_df.plot(kind="bar", title="Permutation Importance")
+    plt.tight_layout()
+    perm_img = os.path.join(IMAGE_FOLDER, "feature_importances", "xgboost_perm_importance.png")
+    plt.savefig(perm_img)
+    plt.close()
+    wandb.save(perm_img)
+
+    # =====================
+    # Hyperparameter tuning
+    # =====================
+    param_grid = {"n_estimators":[50,100,200], "max_depth":[3,5,7], "learning_rate":[0.01,0.1,0.2]}
+    grid = GridSearchCV(xgb.XGBClassifier(objective="binary:logistic", eval_metric="logloss", use_label_encoder=False, random_state=42),
+                        param_grid, scoring="f1", cv=5, n_jobs=-1)
+    grid.fit(X_train, y_train)
+    best_model = grid.best_estimator_
+    print("Best parameters:", grid.best_params_)
+
+    y_pred_grid, _ = train_evaluate_model(best_model, X_train, y_train, X_test, y_test, features, "xgboost_gridsearch")
+
+    # Save best model as artifact
+    model_file = os.path.join(OUTPUT_FOLDER, "xgboost_best_model.pkl")
+    joblib.dump(best_model, model_file)
+    artifact = wandb.Artifact("xgboost_best_model", type="model")
+    artifact.add_file(model_file)
+    wandb.log_artifact(artifact)
+
+    wandb.finish()

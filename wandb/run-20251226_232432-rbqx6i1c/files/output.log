@@ -1,0 +1,23 @@
+C:\Users\kewtiiiii\anaconda3\Lib\site-packages\xgboost\training.py:199: UserWarning: [23:24:39] WARNING: C:\actions-runner\_work\xgboost\xgboost\src\learner.cc:790:
+Parameters: { "use_label_encoder" } are not used.
+
+  bst.update(dtrain, iteration=i, fobj=obj)
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+C:\Users\kewtiiiii\anaconda3\Lib\site-packages\xgboost\training.py:199: UserWarning: [23:25:03] WARNING: C:\actions-runner\_work\xgboost\xgboost\src\learner.cc:790:
+Parameters: { "use_label_encoder" } are not used.
+
+  bst.update(dtrain, iteration=i, fobj=obj)
+Best parameters: {'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 50}
+C:\Users\kewtiiiii\anaconda3\Lib\site-packages\xgboost\training.py:199: UserWarning: [23:25:03] WARNING: C:\actions-runner\_work\xgboost\xgboost\src\learner.cc:790:
+Parameters: { "use_label_encoder" } are not used.
+
+  bst.update(dtrain, iteration=i, fobj=obj)
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.

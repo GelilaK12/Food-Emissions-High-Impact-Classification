@@ -1,0 +1,10 @@
+Outliers indices: (array([ 0,  0,  2, 11]), array([0, 2, 4, 0]))
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.
+              precision    recall  f1-score    support
+0              1.000000  0.888889  0.941176   9.000000
+1              0.800000  1.000000  0.888889   4.000000
+accuracy       0.923077  0.923077  0.923077   0.923077
+macro avg      0.900000  0.944444  0.915033  13.000000
+weighted avg   0.938462  0.923077  0.925088  13.000000
+Best hyperparameters: {'activation': 'relu', 'alpha': 0.0001, 'hidden_layer_sizes': (16, 16)}
+[34m[1mwandb[0m: [33mWARNING[0m Linked 1 file into the W&B run directory (hardlinks); call wandb.save again to sync new files.

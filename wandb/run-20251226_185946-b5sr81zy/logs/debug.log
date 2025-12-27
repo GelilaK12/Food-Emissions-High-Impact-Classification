@@ -1,0 +1,5 @@
+2025-12-26 18:59:46,509 INFO    MainThread:34772 [wandb_init.py:setup_run_log_directory():714] Logging user logs to C:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\wandb\run-20251226_185946-b5sr81zy\logs\debug.log
+2025-12-26 18:59:46,509 INFO    MainThread:34772 [wandb_init.py:setup_run_log_directory():715] Logging internal logs to C:\Users\kewtiiiii\Desktop\Projects\food-emissions-classification\wandb\run-20251226_185946-b5sr81zy\logs\debug-internal.log
+2025-12-26 18:59:46,509 INFO    MainThread:34772 [wandb_init.py:init():841] calling init triggers
+2025-12-26 18:59:46,509 INFO    MainThread:34772 [wandb_init.py:init():846] wandb.init called with sweep_config: {}
+config: {'model_type': 'bayesian_logistic', 'num_samples': 2000, 'num_chains': 4, '_wandb': {}}
