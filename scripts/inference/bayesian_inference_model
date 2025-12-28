@@ -1,0 +1,93 @@
+import pandas as pd
+import numpy as np
+import joblib
+import pymc as pm
+import arviz as az
+from sklearn.preprocessing import StandardScaler
+from pathlib import Path
+
+# =========================
+# Config
+# =========================
+TRACE_PATH = "scripts/artifacts/bayesian_logreg_trace.pkl"  
+NEW_DATA_PATH = "data/new_food_data.csv"                     
+OUTPUT_FOLDER = "outputs/inference"                          
+LOG_WANDB = False                                            
+FEATURES = [
+    "land_use_change",
+    "animal_feed",
+    "farm",
+    "processing",
+    "transport",
+    "packaging",
+    "retail"
+]
+
+# =========================
+# Load saved trace
+# =========================
+trace = joblib.load(TRACE_PATH)
+print(f"Loaded trace from {TRACE_PATH}")
+
+# =========================
+# Load new data
+# =========================
+new_data = pd.read_csv(NEW_DATA_PATH)
+
+new_data.columns = new_data.columns.str.strip().str.lower().str.replace(" ", "_")
+
+food_products = new_data["food_product"].values
+
+X_new = new_data[FEATURES].apply(pd.to_numeric, errors="coerce")
+mask = X_new.notna().all(axis=1)
+
+X_new = X_new.loc[mask].values.astype("float64")
+food_products = food_products[mask]
+
+scaler = StandardScaler()
+X_new_scaled = scaler.fit_transform(X_new)
+
+# =========================
+# Posterior Predictive
+# =========================
+with pm.Model() as model:
+    intercept = pm.Normal("intercept", mu=0, sigma=2)
+    coeffs = pm.Normal("coeffs", mu=0, sigma=2, shape=X_new_scaled.shape[1])
+    logits = pm.math.clip(intercept + pm.math.dot(X_new_scaled, coeffs), -15, 15)
+    y_obs = pm.Bernoulli("y_obs", logit_p=logits)
+
+    ppc = pm.sample_posterior_predictive(trace, model=model)
+
+y_pred_prob = ppc.posterior_predictive["y_obs"].mean(("chain", "draw")).values
+y_pred_class = (y_pred_prob > 0.5).astype(int)
+
+# =========================
+# Save predictions
+# =========================
+Path(OUTPUT_FOLDER).mkdir(parents=True, exist_ok=True)
+pred_df = pd.DataFrame({
+    "food_product": food_products,
+    **{f: X_new_scaled[:, i] for i, f in enumerate(FEATURES)},
+    "pred_prob": y_pred_prob,
+    "pred_class": y_pred_class
+})
+
+pred_file = f"{OUTPUT_FOLDER}/bayesian_predictions.csv"
+pred_df.to_csv(pred_file, index=False)
+print(f"Predictions saved to {pred_file}")
+
+# =========================
+# Optional W&B logging
+# =========================
+if LOG_WANDB:
+    import wandb
+    wandb.init(
+        project="food_emissions_classification",
+        entity="gelilakassaye6-vsco",
+        name="bayesian_inference",
+        reinit=True
+    )
+    table = wandb.Table(dataframe=pred_df)
+    wandb.log({"bayesian_predictions": table})
+    wandb.finish()
+    print("Predictions logged to W&B")

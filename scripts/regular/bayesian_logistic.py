@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pymc as pm
 import arviz as az
+import joblib
+from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -120,6 +122,34 @@ if __name__ == "__main__":
     print(cm)
     plt.savefig(f"{IMAGE_FOLDER}/bayesian_logistic_confusion_matrix.png")
     plt.close()
+
+    #============================================
+    # Joblib
+    # ============================================
+    
+    Path("artifacts").mkdir(parents=True, exist_ok=True)
+
+    trace_file = "scripts/artifacts/bayesian_logreg_trace.pkl"
+    joblib.dump(trace, trace_file)
+    print(f"Saved Bayesian trace to {trace_file}")
+
+    #============================================
+    # API
+    # ============================================
+ 
+    ARTIFACTS_DIR = Path(__file__).resolve().parent.parent / "artifacts"
+    ARTIFACTS_DIR.mkdir(exist_ok=True)
+
+    coef_means = trace.posterior["w"].mean(dim=("chain", "draw")).values
+    bias_mean = trace.posterior["b"].mean(dim=("chain", "draw")).values
+
+    joblib.dump((coef_means, bias_mean), ARTIFACTS_DIR / "posterior_means.pkl")
+    print(" Posterior means saved to posterior_means.pkl")
+
+
+
+    
+
 
 # ============================================
 # Insight

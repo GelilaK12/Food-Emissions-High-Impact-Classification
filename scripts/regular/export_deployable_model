@@ -1,0 +1,20 @@
+import joblib
+from pathlib import Path
+import numpy as np
+
+ARTIFACTS_DIR = Path(__file__).resolve().parent.parent / "artifacts"
+deployable_model_path = ARTIFACTS_DIR / "deployable_model.pkl"
+
+coef_means, bias_mean = joblib.load(ARTIFACTS_DIR / "posterior_means.pkl")
+
+class BayesianLogisticWrapper:
+    def __init__(self, coef, bias):
+        self.coef_ = coef.reshape(1, -1)
+        self.intercept_ = np.array([bias])
+    def predict(self, X):
+        z = X @ self.coef_.T + self.intercept_
+        return (1 / (1 + np.exp(-z)) > 0.5).astype(int).ravel()
+
+model = BayesianLogisticWrapper(coef_means, bias_mean)
+joblib.dump(model, deployable_model_path)
+print(f" Deployable model saved to {deployable_model_path}")
