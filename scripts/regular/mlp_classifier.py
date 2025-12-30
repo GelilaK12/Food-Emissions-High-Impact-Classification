@@ -12,6 +12,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.inspection import permutation_importance
 from sklearn.calibration import calibration_curve
+from sklearn.metrics import roc_curve, auc, RocCurveDisplay
+
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 data_path = os.path.join(BASE_DIR, "data", "Food_Production.csv")
@@ -94,6 +96,29 @@ X_train_bal, y_train_bal = smote.fit_resample(X_train_scaled, y_train)
 mlp = MLPClassifier(hidden_layer_sizes=(32,16), activation="relu", solver="adam", max_iter=1000, random_state=42)
 mlp.fit(X_train_bal, y_train_bal)
 
+# ============================================
+# ROC-AUC
+# ============================================
+
+y_true = y_test 
+y_scores = mlp.predict_proba(X_test)[:, 1]  
+
+fpr, tpr, thresholds = roc_curve(y_true, y_scores)
+
+roc_auc = auc(fpr, tpr)
+print(f"MLP Model ROC-AUC: {roc_auc:.3f}")
+
+
+plt.figure(figsize=(6,6))
+plt.plot(fpr, tpr, color="blue", lw=2, label=f"ROC curve (AUC = {roc_auc:.3f})")
+plt.plot([0, 1], [0, 1], color="red", lw=1, linestyle='--', label="Random guess")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("MLP Model ROC Curve - High Impact Food Classification")
+plt.legend(loc="lower right")
+plt.grid(True)
+plt.savefig(f"{IMAGE_FOLDER}/roc_curve_mlp_model.png")
+plt.close()
 # ============================================
 # Threshold tuning & Evaluation
 # ============================================

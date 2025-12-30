@@ -20,10 +20,13 @@ class BayesianLogisticWrapper:
         self.intercept_ = np.array([bias])
 
     def predict(self, X):
-        z = X @ self.coef_.T + self.intercept_
+        # Convert DataFrame to NumPy array to avoid attribute errors
+        X_np = X.to_numpy()
+        z = X_np @ self.coef_.T + self.intercept_
         return (1 / (1 + np.exp(-z)) > 0.5).astype(int).ravel()
 
-# Create model
+
+
 model = BayesianLogisticWrapper(coef_means, bias_mean)
 
 # -------------------------

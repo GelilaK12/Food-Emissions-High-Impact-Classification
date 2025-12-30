@@ -1,0 +1,24 @@
+,0
+Food product,0
+Land use change,0
+Animal Feed,0
+Farm,0
+Processing,0
+Transport,0
+Packaging,0
+Retail,0
+Total_emissions,0
+Eutrophying emissions per 1000kcal (gPO₄eq per 1000kcal),10
+Eutrophying emissions per kilogram (gPO₄eq per kilogram),5
+Eutrophying emissions per 100g protein (gPO₄eq per 100 grams protein),16
+Freshwater withdrawals per 1000kcal (liters per 1000kcal),13
+Freshwater withdrawals per 100g protein (liters per 100g protein),17
+Freshwater withdrawals per kilogram (liters per kilogram),5
+Greenhouse gas emissions per 1000kcal (kgCO₂eq per 1000kcal),10
+Greenhouse gas emissions per 100g protein (kgCO₂eq per 100g protein),16
+Land use per 1000kcal (m² per 1000kcal),10
+Land use per kilogram (m² per kilogram),5
+Land use per 100g protein (m² per 100g protein),16
+Scarcity-weighted water use per kilogram (liters per kilogram),5
+Scarcity-weighted water use per 100g protein (liters per 100g protein),17
+Scarcity-weighted water use per 1000kcal (liters per 1000 kilocalories),13

@@ -7,6 +7,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.inspection import permutation_importance
+from sklearn.metrics import roc_curve, auc, RocCurveDisplay
 import mlflow
 import mlflow.sklearn
 
@@ -14,7 +15,6 @@ import mlflow.sklearn
 mlflow.set_tracking_uri("sqlite:///mlflow.db")
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-data_path = os.path.join(BASE_DIR, "data", "Food_Production.csv")
 
 # ================= Folder Setup =================
 OUTPUT_FOLDER = os.path.join(BASE_DIR, "outputs", "logistic_random_forest")
@@ -23,6 +23,7 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 os.makedirs(IMAGE_FOLDER, exist_ok=True)
 
 # ================= Data Loading =================
+data_path = os.path.join(BASE_DIR, "data", "Food_Production.csv")
 data = pd.read_csv(data_path)
 
 print("\n=== Dataset shape (rows, columns) ===")
@@ -77,7 +78,6 @@ def log_model_run(model, model_name, X_test, y_test, artifacts_dict, params_dict
         
         mlflow.sklearn.log_model(model, f"{model_name}_model")
 
-
 # ============================================
 # Logistic Regression (Baseline Model)
 # ============================================
@@ -125,6 +125,27 @@ log_model_run(
 )
 
 
+#ROC-AUC
+y_true = y_test  # actual labels (0 = low-impact, 1 = high-impact)
+y_scores = log_model.predict_proba(X_test)[:, 1]  # probability of being high-impact
+
+fpr, tpr, thresholds = roc_curve(y_true, y_scores)
+
+roc_auc = auc(fpr, tpr)
+print(f"Logistic Regression ROC-AUC: {roc_auc:.3f}")
+
+
+plt.figure(figsize=(6,6))
+plt.plot(fpr, tpr, color="blue", lw=2, label=f"ROC curve (AUC = {roc_auc:.3f})")
+plt.plot([0, 1], [0, 1], color="red", lw=1, linestyle='--', label="Random guess")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("Logistic Regression ROC Curve - High Impact Food Classification")
+plt.legend(loc="lower right")
+plt.grid(True)
+plt.savefig(f"{IMAGE_FOLDER}/roc_curve_logistic_regression.png")
+plt.close()
+
 # ============================================
 # Random Forest Classifier (Nonlinear Benchmark)
 # ============================================
@@ -143,6 +164,26 @@ rf_cm = confusion_matrix(y_test, y_pred_rf)
 pd.DataFrame(rf_cm, index=["Actual 0", "Actual 1"], columns=["Predicted 0", "Predicted 1"]).to_csv(
     f"{OUTPUT_FOLDER}/random_forest_confusion_matrix.csv"
 )
+#ROC-AUC
+y_true = y_test 
+y_scores = rf_model.predict_proba(X_test)[:, 1]  
+
+fpr, tpr, thresholds = roc_curve(y_true, y_scores)
+
+roc_auc = auc(fpr, tpr)
+print(f"Random Forest ROC-AUC: {roc_auc:.3f}")
+
+
+plt.figure(figsize=(6,6))
+plt.plot(fpr, tpr, color="blue", lw=2, label=f"ROC curve (AUC = {roc_auc:.3f})")
+plt.plot([0, 1], [0, 1], color="red", lw=1, linestyle='--', label="Random guess")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("Random Forest ROC Curve - High Impact Food Classification")
+plt.legend(loc="lower right")
+plt.grid(True)
+plt.savefig(f"{IMAGE_FOLDER}/roc_curve_random_forest.png")
+plt.close()
 
 # Feature importance
 rf_importances = pd.Series(rf_model.feature_importances_, index=features).sort_values(ascending=False)

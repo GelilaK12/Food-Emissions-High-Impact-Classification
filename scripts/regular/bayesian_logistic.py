@@ -106,6 +106,29 @@ if __name__ == "__main__":
     pred_df.to_csv(f"{OUTPUT_FOLDER}/bayesian_logistic_predictions.csv", index=False)
 
     # ============================================
+    # ROC-AUC Evaluation
+    # ============================================
+    from sklearn.metrics import roc_curve, auc, RocCurveDisplay
+
+    fpr, tpr, thresholds = roc_curve(y_test, pred_means)
+    roc_auc = auc(fpr, tpr)
+    print(f"\n=== Bayesian Logistic Regression ROC-AUC ===\nROC-AUC: {roc_auc:.3f}")
+
+
+    plt.figure(figsize=(6,6))
+    plt.plot(fpr, tpr, color='blue', lw=2, label=f'ROC curve (AUC = {roc_auc:.3f})')
+    plt.plot([0, 1], [0, 1], color='red', lw=1, linestyle='--', label='Random guess')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('ROC Curve - Bayesian Logistic Regression')
+    plt.legend(loc='lower right')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(f"{IMAGE_FOLDER}/bayesian_logistic_roc_curve.png")
+    plt.close()
+
+
+    # ============================================
     # Evaluation
     # ============================================
     report = classification_report(y_test, y_pred, output_dict=True)
